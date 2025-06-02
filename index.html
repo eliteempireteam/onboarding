@@ -140,9 +140,16 @@
 
   // Save step and refresh progress for steps 1–5
   function markComplete(step) {
-    localStorage.setItem("lastCompletedStep", step.toString());
-    updateProgressUI();
+  localStorage.setItem("lastCompletedStep", step.toString());
+  updateProgressUI();
+
+  const button = document.getElementById("btn-step-" + step);
+  if (button) {
+    button.textContent = "✅ Step Complete";
+    button.classList.add("completed");
+    button.disabled = true;
   }
+}
 
   // Step 6: Save and redirect to confirmation page
   function markStepComplete(step) {
