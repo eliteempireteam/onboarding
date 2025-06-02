@@ -12,6 +12,12 @@
     <div class="logo">
       <img src="https://storage.googleapis.com/msgsndr/vnUxqumAkGGJeHp06s9n/media/67fc2eac3baf5df63486c7b6.png" alt="Elite Empire Logo">
     </div>
+    <div style="text-align: right; margin-top: 10px;">
+  <button id="theme-toggle" style="padding: 6px 12px; border-radius: 6px; font-weight: bold;">
+    🌙 Enable Dark Mode
+  </button>
+</div>
+
     <h1><span id="agent-name"></span>, Welcome to Elite Empire’s Social Media Setup</h1>
     <p class="intro">
       I'm Coach Barbee, and I want to personally welcome you to the Elite Empire brand setup experience. I understand how important social media influence is in today’s world — but I also know how overwhelming it can be to figure it out on your own. <strong class="key">That’s why I’ve simplified this process for you.</strong>
@@ -206,6 +212,24 @@
   }
 
   document.addEventListener("DOMContentLoaded", updateProgressUI);
+  document.addEventListener("DOMContentLoaded", function () {
+  updateProgressUI();
+
+  const toggleBtn = document.getElementById("theme-toggle");
+  const storedTheme = localStorage.getItem("theme");
+
+  if (storedTheme === "dark") {
+    document.body.classList.add("dark-mode");
+    toggleBtn.textContent = "☀️ Enable Light Mode";
+  }
+
+  toggleBtn.addEventListener("click", function () {
+    const isDark = document.body.classList.toggle("dark-mode");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+    toggleBtn.textContent = isDark ? "☀️ Enable Light Mode" : "🌙 Enable Dark Mode";
+  });
+});
+
 </script>
 </body>
 </html>
