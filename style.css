@@ -2,14 +2,14 @@ body {
   font-family: 'Segoe UI', sans-serif;
   margin: 0;
   padding: 0;
-  background: #ffffff; /* white */
+  background: #ffffff;
   color: #222;
 }
 
 header {
   text-align: center;
   padding: 2em;
-  background-color: #ffffff; /* white */
+  background-color: #ffffff;
 }
 
 .logo img {
@@ -45,18 +45,10 @@ h1 {
 }
 
 @keyframes wobble {
-  0%, 100% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(5deg);
-  }
-  50% {
-    transform: rotate(-5deg);
-  }
-  75% {
-    transform: rotate(3deg);
-  }
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(5deg); }
+  50% { transform: rotate(-5deg); }
+  75% { transform: rotate(3deg); }
 }
 
 .progress-bar {
@@ -70,11 +62,20 @@ h1 {
   padding: 10px;
   border-radius: 8px;
   background: #eee;
+  min-width: 60px;
+  text-align: center;
 }
 
 .step.complete {
   background: #4caf50;
   color: white;
+  font-weight: bold;
+}
+
+#progress-status {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 1em;
 }
 
 .complete-btn, .launch-button, .access-button {
@@ -107,25 +108,8 @@ h1 {
   background-color: #145dbf;
 }
 
-/* Emphasize key terms */
 strong.key,
 b.key {
   font-weight: bold;
   color: #000;
-}
-
-/* Wobble animation */
-@keyframes wobble {
-  0%, 100% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(1deg);
-  }
-  50% {
-    transform: rotate(-1deg);
-  }
-  75% {
-    transform: rotate(1deg);
-  }
 }
