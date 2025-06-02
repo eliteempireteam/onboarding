@@ -117,12 +117,18 @@
   </main>
 
 <script>
-  // Inject agent name
+  // Extract URL parameters
   const urlParams = new URLSearchParams(window.location.search);
   const agent = urlParams.get('agent') || '';
+  const ghlContactId = urlParams.get("ghl_contact_id");
+
+  if (ghlContactId) {
+    localStorage.setItem("ghl_contact_id", ghlContactId);
+  }
+
   document.getElementById("agent-name").textContent = agent;
 
-  // Update progress bar and steps on load
+  // Update visual progress
   function updateProgressUI() {
     const lastCompletedStep = localStorage.getItem("lastCompletedStep") || "0";
     const percent = Math.round((parseInt(lastCompletedStep) / 6) * 100);
@@ -138,26 +144,55 @@
     }
   }
 
-  // Save step and refresh progress for steps 1–5
-  function markComplete(step) {
-  localStorage.setItem("lastCompletedStep", step.toString());
-  updateProgressUI();
+  // 🔁 Send tag to GoHighLevel
+  function sendTag(tagValue) {
+    const ghlContactId = localStorage.getItem("ghl_contact_id");
+    if (!ghlContactId) return;
 
-  const button = document.getElementById("btn-step-" + step);
-  if (button) {
-    button.textContent = "✅ Step Complete";
-    button.classList.add("completed");
-    button.disabled = true;
+    fetch("https://services.leadconnectorhq.com/hooks/vnUxqumAkGGJeHp06s9n/webhook-trigger/bb4415cb-5da3-45a5-b534-776b6046e328", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        contactId: ghlContactId,
+        tag: tagValue
+      })
+    });
   }
-}
 
-  // Step 6: Save and redirect to confirmation page
+  // Handle steps 1–5
+  function markComplete(step) {
+    localStorage.setItem("lastCompletedStep", step.toString());
+    updateProgressUI();
+
+    const button = document.getElementById("btn-step-" + step);
+    if (button) {
+      button.textContent = "✅ Step Complete";
+      button.classList.add("completed");
+      button.disabled = true;
+    }
+
+    const tagMap = {
+      1: "step-1-facebook-instagram-complete",
+      2: "step-2-instagram-professional",
+      3: "step-3-page-created",
+      4: "step-4-link-complete",
+      5: "step-5-access-complete"
+    };
+
+    if (tagMap[step]) {
+      sendTag(tagMap[step]);
+    }
+  }
+
+  // Final Step: Launch + Tag Complete
   function markStepComplete(step) {
-    localStorage.setItem("lastCompletedStep", step);
+    localStorage.setItem("lastCompletedStep", step.toString());
+    sendTag("social setup complete");
     window.location.href = "https://social.eliteempireteam.com/social-setup-complete-page";
   }
 
-  // Initialize on page load
   document.addEventListener("DOMContentLoaded", updateProgressUI);
 </script>
 </body>
