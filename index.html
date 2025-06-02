@@ -41,8 +41,17 @@
     <div class="step" id="step-5">Step 5</div>
     <div class="step" id="step-6">Step 6</div>
   </div>
+<div id="progress-status">
+  <p>Progress:</p>
+  <div id="progress-container">
+    <div id="progress-bar-fill">
+      <span id="progress-bar-text">
+        Building an Empire – <span id="progress-bar-percent">0%</span>
+      </span>
+    </div>
+  </div>
+</div>
 
-  <div id="progress-status">Progress: <span id="progress-percent">0%</span></div>
 
   <main>
     <section id="step1">
@@ -115,8 +124,7 @@
 
       </section>
   </main>
-
-<script>
+<<script>
   // Extract URL parameters
   const urlParams = new URLSearchParams(window.location.search);
   const agent = urlParams.get('agent') || '';
@@ -133,13 +141,17 @@
     const lastCompletedStep = localStorage.getItem("lastCompletedStep") || "0";
     const percent = Math.round((parseInt(lastCompletedStep) / 6) * 100);
     document.getElementById("progress-percent").innerText = percent + "%";
+    
+    // Update progress bar fill and text
+    const bar = document.getElementById("progress-bar-fill");
+    const text = document.getElementById("progress-bar-percent");
+    if (bar) bar.style.width = percent + "%";
+    if (text) text.innerText = percent + "%";
 
     for (let i = 1; i <= 6; i++) {
       const step = document.getElementById("step-" + i);
-      if (i <= parseInt(lastCompletedStep)) {
-        step.classList.add("complete");
-      } else {
-        step.classList.remove("complete");
+      if (step) {
+        step.classList.toggle("complete", i <= parseInt(lastCompletedStep));
       }
     }
   }
