@@ -216,3 +216,43 @@ body.dark-mode .access-button:hover {
   background-color: #c20810;
 }
 
+@media (max-width: 768px) {
+  .progress-bar {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .step {
+    min-width: 45%;
+    margin-bottom: 10px;
+  }
+
+  .download-buttons.icon-style {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .intro {
+    font-size: 15px;
+    padding: 0 10px;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+  }
+
+  .complete-btn,
+  .launch-button,
+  .access-button {
+    width: 90%;
+    font-size: 1em;
+  }
+
+  #progress-bar-text {
+    font-size: 11px;
+  }
+}
+
+
