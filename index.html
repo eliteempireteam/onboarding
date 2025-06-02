@@ -130,10 +130,10 @@
 
       </section>
   </main>
-<<script>
+  <script>
   // Extract URL parameters
   const urlParams = new URLSearchParams(window.location.search);
-  const agent = urlParams.get('agent') || '';
+  const agent = urlParams.get("agent") || "";
   const ghlContactId = urlParams.get("ghl_contact_id");
 
   if (ghlContactId) {
@@ -142,45 +142,48 @@
 
   document.getElementById("agent-name").textContent = agent;
 
-  // Update visual progress
+  // 🌟 Progress UI update
   function updateProgressUI() {
     const lastCompletedStep = localStorage.getItem("lastCompletedStep") || "0";
     const percent = Math.round((parseInt(lastCompletedStep) / 6) * 100);
-    document.getElementById("progress-percent").innerText = percent + "%";
-    
-    // Update progress bar fill and text
-    const bar = document.getElementById("progress-bar-fill");
-    const text = document.getElementById("progress-bar-percent");
-    if (bar) bar.style.width = percent + "%";
-    if (text) text.innerText = percent + "%";
+    document.getElementById("progress-percent").innerText = `${percent}%`;
+
+    const fill = document.getElementById("progress-bar-fill");
+    if (fill) {
+      fill.style.width = percent + "%";
+      fill.innerText = `Building an Empire – ${percent}%`;
+    }
 
     for (let i = 1; i <= 6; i++) {
       const step = document.getElementById("step-" + i);
-      if (step) {
-        step.classList.toggle("complete", i <= parseInt(lastCompletedStep));
+      if (i <= parseInt(lastCompletedStep)) {
+        step.classList.add("complete");
+      } else {
+        step.classList.remove("complete");
       }
     }
   }
 
-  // 🔁 Send tag to GoHighLevel
+  // 🔁 Send tag to n8n > GHL
   function sendTag(tagValue) {
-  const ghlContactId = localStorage.getItem("ghl_contact_id");
-  if (!ghlContactId) return;
+    const ghlContactId = localStorage.getItem("ghl_contact_id");
+    if (!ghlContactId) return;
 
-  fetch("https://services.leadconnectorhq.com/hooks/vnUxqumAkGGJeHp06s9n/webhook-trigger/bb4415cb-5da3-45a5-b534-776b6046e328", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      contactId: ghlContactId,   // ✅ this must be exactly 'contactId'
-      tag: tagValue              // ✅ your tag (e.g. 'step-1-complete')
-    })
-  });
-}
+    fetch("https://n8n.eliteempireteam.com/webhook/ghl-social-tag", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        contactId: ghlContactId,
+        tag: tagValue
+      })
+    }).then(res => res.json())
+      .then(data => console.log("✅ Tag sent:", data))
+      .catch(err => console.error("❌ Tag error:", err));
+  }
 
-
-  // Handle steps 1–5
+  // ✅ Handle Steps 1–5
   function markComplete(step) {
     localStorage.setItem("lastCompletedStep", step.toString());
     updateProgressUI();
@@ -205,32 +208,33 @@
     }
   }
 
-  // Final Step: Launch + Tag Complete
+  // 🚀 Final Step 6
   function markStepComplete(step) {
     localStorage.setItem("lastCompletedStep", step.toString());
     sendTag("social setup complete");
     window.location.href = "https://social.eliteempireteam.com/social-setup-complete-page";
   }
 
-  document.addEventListener("DOMContentLoaded", updateProgressUI);
+  // 🌓 Dark mode toggle
   document.addEventListener("DOMContentLoaded", function () {
-  updateProgressUI();
+    updateProgressUI();
 
-  const toggleBtn = document.getElementById("theme-toggle");
-  const storedTheme = localStorage.getItem("theme");
+    const toggleBtn = document.getElementById("theme-toggle");
+    const storedTheme = localStorage.getItem("theme");
 
-  if (storedTheme === "dark") {
-    document.body.classList.add("dark-mode");
-    toggleBtn.textContent = "☀️ Enable Light Mode";
-  }
+    if (storedTheme === "dark") {
+      document.body.classList.add("dark-mode");
+      toggleBtn.textContent = "🌞 Enable Light Mode";
+    }
 
-  toggleBtn.addEventListener("click", function () {
-    const isDark = document.body.classList.toggle("dark-mode");
-    localStorage.setItem("theme", isDark ? "dark" : "light");
-    toggleBtn.textContent = isDark ? "☀️ Enable Light Mode" : "🌙 Enable Dark Mode";
+    toggleBtn.addEventListener("click", function () {
+      const isDark = document.body.classList.toggle("dark-mode");
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+      toggleBtn.textContent = isDark
+        ? "🌞 Enable Light Mode"
+        : "🌙 Enable Dark Mode";
+    });
   });
-});
-
 </script>
 </body>
 </html>
