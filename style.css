@@ -44,6 +44,12 @@ h1 {
   animation: wobble 0.6s ease-in-out;
 }
 
+.subnote {
+  margin-top: -10px;
+  font-size: 0.95em;
+  color: #444;
+}
+
 @keyframes wobble {
   0%, 100% { transform: rotate(0deg); }
   25% { transform: rotate(5deg); }
