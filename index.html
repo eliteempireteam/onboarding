@@ -109,32 +109,49 @@
         <li>Pages are set to public</li>
       </ul>
       <p>Once confirmed, click the button below to complete setup and launch your brand!</p>
-      <button class="launch-button">🚀 Launch My Brand</button>
+     <button class="launch-button" onclick="markStepComplete(6)">🚀 Launch My Brand</button>
     </section>
   </main>
-</body>
-</html>
 
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const agent = urlParams.get('agent') || '';
-    document.getElementById("agent-name").textContent = agent;
+      </section>
+  </main>
 
-    function markStepComplete(step) {
-      localStorage.setItem("lastCompletedStep", step);
-      window.location.href = "https://social.eliteempireteam.com/social-setup-complete-page";
-    }
+<script>
+  // Inject agent name
+  const urlParams = new URLSearchParams(window.location.search);
+  const agent = urlParams.get('agent') || '';
+  document.getElementById("agent-name").textContent = agent;
 
-    const steps = document.querySelectorAll('.step');
-    const progressText = document.getElementById('progress-percent');
-    const savedStep = parseInt(localStorage.getItem("lastCompletedStep") || 0);
-    const percent = Math.round((savedStep / steps.length) * 100);
-    progressText.textContent = `${percent}%`;
-    steps.forEach((stepEl, index) => {
-      if (index < savedStep) {
-        stepEl.classList.add('complete');
+  // Update progress bar and steps on load
+  function updateProgressUI() {
+    const lastCompletedStep = localStorage.getItem("lastCompletedStep") || "0";
+    const percent = Math.round((parseInt(lastCompletedStep) / 6) * 100);
+    document.getElementById("progress-percent").innerText = percent + "%";
+
+    for (let i = 1; i <= 6; i++) {
+      const step = document.getElementById("step-" + i);
+      if (i <= parseInt(lastCompletedStep)) {
+        step.classList.add("complete");
+      } else {
+        step.classList.remove("complete");
       }
-    });
-  </script>
+    }
+  }
+
+  // Save step and refresh progress for steps 1–5
+  function markComplete(step) {
+    localStorage.setItem("lastCompletedStep", step.toString());
+    updateProgressUI();
+  }
+
+  // Step 6: Save and redirect to confirmation page
+  function markStepComplete(step) {
+    localStorage.setItem("lastCompletedStep", step);
+    window.location.href = "https://social.eliteempireteam.com/social-setup-complete-page";
+  }
+
+  // Initialize on page load
+  document.addEventListener("DOMContentLoaded", updateProgressUI);
+</script>
 </body>
 </html>
