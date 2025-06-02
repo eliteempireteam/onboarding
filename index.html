@@ -8,6 +8,116 @@
   <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
-  <!-- Content is loaded from the document canvas -->
+  <header>
+    <div class="logo">
+      <img src="https://storage.googleapis.com/msgsndr/vnUxqumAkGGJeHp06s9n/media/67fc2eac3baf5df63486c7b6.png" alt="Elite Empire Logo">
+    </div>
+    <h1><span id="agent-name"></span>, Welcome to Elite Empire’s Social Media Setup</h1>
+    <p class="intro">
+      I'm Coach Barbee, and I want to personally welcome you to the Elite Empire brand setup experience. I understand how important social media influence is in today’s world — but I also know how overwhelming it can be to figure it out on your own. That’s why I’ve simplified this process for you.<br><br>
+      You don’t have to guess what to post, how to stay compliant, or how to look professional — we’re handling that for you. Our goal is to help you increase your impact and income while decreasing confusion and wasted time. This setup takes less than 20 minutes and can be completed entirely from your phone.<br><br>
+      In 2025, social media is not optional—it's a business growth accelerator. Brands that actively post and stay top-of-mind convert 78% more leads and referrals than those that don’t. Most agents using this system generate 3 recruits × $5K/month in premium, attract referrals for Life, Auto, Home, PLPP, Vivint Home Security, Identity Theft Protection, Mortgage Loans, and Investments. With consistency and focus, many agents are earning an additional $1K–$3K monthly—or even building a 6-figure annual income—all on a part-time basis from their phone or home.
+    </p>
+    <p><strong>Email to use for access:</strong> <span title="Used to add Coach Barbee to your business page">rvpbarbee@eliteempireteam.com</span></p>
+    <div class="download-buttons">
+      <a href="https://apps.apple.com/us/app/meta-business-suite/id514643583" target="_blank">Download Meta Suite (iOS)</a>
+      <a href="https://play.google.com/store/apps/details?id=com.facebook.pages.app&hl=en_US&gl=US" target="_blank">Download Meta Suite (Android)</a>
+    </div>
+  </header>
+
+  <div class="progress-bar">
+    <div class="step" id="step-1">Step 1</div>
+    <div class="step" id="step-2">Step 2</div>
+    <div class="step" id="step-3">Step 3</div>
+    <div class="step" id="step-4">Step 4</div>
+    <div class="step" id="step-5">Step 5</div>
+    <div class="step" id="step-6">Step 6</div>
+  </div>
+
+  <div id="progress-status">Progress: <span id="progress-percent">0%</span></div>
+
+  <main>
+    <section id="step1">
+      <h2 title="Connect both platforms for uniform branding">📱 Step 1: Facebook Personal + Instagram Setup</h2>
+      <p>Connect your personal Facebook account and Instagram to ensure consistency across platforms. These accounts will form the foundation for your business presence.</p>
+    </section>
+
+    <section id="step2">
+      <h2 title="Switch Instagram to a business profile">📌 Step 2: Switch to Instagram Professional</h2>
+      <p>Go to: Profile → Settings → Account → Switch to Professional → Choose Business. Make it public. Select a category such as Financial Services. Use your Instagram Bio from the email you received. This bio is different than your Facebook one. You’ll also receive a custom Link-in-Bio page including your calendar and service links.</p>
+    </section>
+
+    <section id="step3">
+      <h2 title="This is the public page clients will see">📘 Step 3: Create Your Facebook Business Page</h2>
+      <p>
+        Pro Tip: Your Master Bio is for your Facebook Business Page. Your Facebook Personal Bio should include a CTA to follow your Business Page.<br>
+        Go to Pages → + Create New Page<br>
+        Page Name: Your Name + Financial<br>
+        Example Page Name: Jane Smith Financial<br>
+        Category: Financial Services<br>
+        Paste your Master Bio into the "About" section and upload your profile photo and banner from your email.
+      </p>
+    </section>
+
+    <section id="step4">
+      <h2 title="Link Instagram to unlock features">🔗 Step 4: Link Facebook Page to Instagram</h2>
+      <p>
+        Go to your Facebook Business Page → Settings → Linked Accounts → Connect Instagram.<br><br>
+        ✨ Pro Tip: Make sure you're logged into the correct Facebook account that owns your Business Page. If you manage multiple pages, select the one branded for your financial business.<br><br>
+        ✅ Unlocks features:
+        <ul>
+          <li>Professional Insights</li>
+          <li>Ad Tools</li>
+          <li>Post Scheduling via Meta Business Suite</li>
+        </ul>
+        ⚠️ <strong title="Connecting the wrong account disables analytics and ads">Disclaimer:</strong> DO NOT connect your personal Facebook profile to Instagram. You must link to a Facebook Business Page to unlock business features like analytics, ad tracking, and automation.
+      </p>
+    </section>
+
+    <section id="step5">
+      <h2 title="Allows marketing automation by Coach Barbee">🛠 Step 5: Grant Posting Access</h2>
+      <p>
+        Open the Facebook app → Menu → Pages → Select your Business Page → Settings (gear icon) → Page Access → Add New → Enter: <strong>rvpbarbee@eliteempireteam.com</strong><br>
+        Set Role as: Content Manager or Full Control.<br><br>
+        🔒 This does NOT give us access to your inbox, DMs, or personal messages. This permission is only for posting and managing business content.
+      </p>
+    </section>
+
+    <section id="step6">
+      <h2 title="Final check before launch">📣 Step 6: Notify Coach Barbee</h2>
+      <p>
+        ✅ Double-check that:
+        <ul>
+          <li>Your Instagram and Facebook are fully set up</li>
+          <li>Bios are added to your profiles</li>
+          <li>Pages are set to public</li>
+        </ul>
+        Once confirmed, click the button below to complete setup and launch your brand!
+      </p>
+      <button onclick="markStepComplete(6)" class="launch-button">🚀 Launch My Brand</button>
+    </section>
+  </main>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const agent = urlParams.get('agent') || '';
+    document.getElementById("agent-name").textContent = agent;
+
+    function markStepComplete(step) {
+      localStorage.setItem("lastCompletedStep", step);
+      window.location.href = "https://social.eliteempireteam.com/social-setup-complete-page";
+    }
+
+    const steps = document.querySelectorAll('.step');
+    const progressText = document.getElementById('progress-percent');
+    const savedStep = parseInt(localStorage.getItem("lastCompletedStep") || 0);
+    const percent = Math.round((savedStep / steps.length) * 100);
+    progressText.textContent = `${percent}%`;
+    steps.forEach((stepEl, index) => {
+      if (index < savedStep) {
+        stepEl.classList.add('complete');
+      }
+    });
+  </script>
 </body>
 </html>
