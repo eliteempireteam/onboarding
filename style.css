@@ -101,6 +101,13 @@ h1 {
   transform: scale(1.05);
 }
 
+button.complete-btn.completed {
+  background-color: #4caf50;
+  color: white;
+  cursor: default;
+  pointer-events: none;
+}
+
 .launch-button {
   font-size: 1.1em;
   font-weight: bold;
