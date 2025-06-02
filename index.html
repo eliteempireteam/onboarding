@@ -164,20 +164,21 @@
 
   // 🔁 Send tag to GoHighLevel
   function sendTag(tagValue) {
-    const ghlContactId = localStorage.getItem("ghl_contact_id");
-    if (!ghlContactId) return;
+  const ghlContactId = localStorage.getItem("ghl_contact_id");
+  if (!ghlContactId) return;
 
-    fetch("https://services.leadconnectorhq.com/hooks/vnUxqumAkGGJeHp06s9n/webhook-trigger/bb4415cb-5da3-45a5-b534-776b6046e328", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        contactId: ghlContactId,
-        tag: tagValue
-      })
-    });
-  }
+  fetch("https://services.leadconnectorhq.com/hooks/vnUxqumAkGGJeHp06s9n/webhook-trigger/bb4415cb-5da3-45a5-b534-776b6046e328", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      contactId: ghlContactId,   // ✅ this must be exactly 'contactId'
+      tag: tagValue              // ✅ your tag (e.g. 'step-1-complete')
+    })
+  });
+}
+
 
   // Handle steps 1–5
   function markComplete(step) {
