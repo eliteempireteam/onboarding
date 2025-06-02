@@ -21,8 +21,10 @@ h1 {
   color: #e50914;
 }
 
-.intro strong {
+.intro strong,
+.intro b {
   color: #e50914;
+  font-weight: bold;
 }
 
 .download-buttons a.meta-btn {
@@ -36,6 +38,7 @@ h1 {
   text-decoration: none;
   transition: background 0.3s, transform 0.2s;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: wobble 1.6s infinite ease-in-out;
 }
 
 .meta-btn.ios {
@@ -104,4 +107,27 @@ h1 {
 
 .access-button:hover {
   background-color: #145dbf;
+}
+
+/* Emphasize key terms */
+strong.key,
+b.key {
+  font-weight: bold;
+  color: #000;
+}
+
+/* Wobble animation */
+@keyframes wobble {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(1deg);
+  }
+  50% {
+    transform: rotate(-1deg);
+  }
+  75% {
+    transform: rotate(1deg);
+  }
 }
