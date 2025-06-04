@@ -164,31 +164,45 @@ const urlParams = new URLSearchParams(window.location.search);
     function sendTag(tagValue) {
       const id = localStorage.getItem("ghlcontactId");
       if (!id) return;
-      fetch("https://n8n.eliteempireteam.com/webhook/ghl-social-tag", {
+
+      fetch("https://rest.gohighlevel.com/v1/contacts/" + id + "/tags", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contactId: id, tag: tagValue })
+        headers: {
+          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2NhdGlvbl9pZCI6InZuVXhxdW1Ba0dHSmVIcDA2czluIiwidmVyc2lvbiI6MSwiaWF0IjoxNzQ4Mzg0OTI4NjA0LCJzdWIiOiJqZ1NCZ0twVDNBSFF0S0toVGswZCJ9.esJetjbj407WbfQB8Ju_HeLt2HbCswTNJPyfa8ywCYA",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ tags: [tagValue] })
       })
-      .then(res => res.json())
-      .then(data => console.log("✅ Tag sent:", data))
-      .catch(err => console.error("❌ Tag error:", err));
+      .then(res => {
+        if (res.ok) {
+          console.log(`✅ Tag '${tagValue}' applied in GHL`);
+        } else {
+          console.error("❌ Failed to apply tag:", res.status);
+        }
+      })
+      .catch(err => {
+        console.error("❌ Tag request error:", err);
+      });
     }
 
     function markComplete(step) {
       localStorage.setItem("lastCompletedStep", step.toString());
       updateProgressUI();
       const tagMap = {
-        1: "step-1-facebook-instagram-complete",
-        2: "step-2-instagram-professional",
-        3: "step-3-page-created",
-        4: "step-4-link-complete",
-        5: "step-5-access-complete"
+        1: ["step1_done", "step-1-facebook-instagram-complete"],
+        2: ["step2_done", "step-2-instagram-professional"],
+        3: ["step3_done", "step-3-page-created"],
+        4: ["step4_done", "step-4-link-complete"],
+        5: ["step5_done", "step-5-access-complete"]
       };
-      if (tagMap[step]) sendTag(tagMap[step]);
+      if (tagMap[step]) {
+        tagMap[step].forEach(tag => sendTag(tag));
+      }
     }
 
     function markStepComplete(step) {
       localStorage.setItem("lastCompletedStep", step.toString());
+      sendTag("step6_done");
       sendTag("social setup complete");
       window.location.href = "https://social.eliteempireteam.com/social-setup-complete-page";
     }
@@ -205,8 +219,8 @@ const urlParams = new URLSearchParams(window.location.search);
         const isDark = document.body.classList.toggle("dark-mode");
         localStorage.setItem("theme", isDark ? "dark" : "light");
         toggleBtn.textContent = isDark ? "🌞 Enable Light Mode" : "🌙 Enable Dark Mode";
+      });
     });
-  });
 </script>
 </body>
 </html>
