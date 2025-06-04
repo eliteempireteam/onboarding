@@ -130,23 +130,32 @@
 
       </section>
   </main>
-  <script>
+<script>
   // Extract URL parameters
   const urlParams = new URLSearchParams(window.location.search);
-  const agent = urlParams.get("agent") || "";
-  const ghlContactId = urlParams.get("ghl_contact_id");
+  const agentParam = urlParams.get("agent");
+  const contactIdParam = urlParams.get("ghl_contact_id");
 
-  if (ghlContactId) {
-    localStorage.setItem("ghl_contact_id", ghlContactId);
-  }
+  // Get from localStorage if URL missing
+  const storedAgent = localStorage.getItem("agent_name") || "";
+  const storedContactId = localStorage.getItem("ghl_contact_id") || "";
 
-  document.getElementById("agent-name").textContent = agent;
+  // Use either URL or localStorage for display
+  const agentName = agentParam || storedAgent;
+  const contactId = contactIdParam || storedContactId;
 
-  // 🌟 Progress UI update
+  // Store if new values passed
+  if (agentParam) localStorage.setItem("agent_name", agentParam);
+  if (contactIdParam) localStorage.setItem("ghl_contact_id", contactIdParam);
+
+  // Inject agent name at top of page
+  document.getElementById("agent-name").textContent = decodeURIComponent(agentName || "");
+
+  // Progress UI
   function updateProgressUI() {
     const lastCompletedStep = localStorage.getItem("lastCompletedStep") || "0";
     const percent = Math.round((parseInt(lastCompletedStep) / 6) * 100);
-    document.getElementById("progress-percent").innerText = `${percent}%`;
+    document.getElementById("progress-bar-percent").innerText = `${percent}%`;
 
     const fill = document.getElementById("progress-bar-fill");
     if (fill) {
@@ -164,26 +173,22 @@
     }
   }
 
-  // 🔁 Send tag to n8n > GHL
+  // Send tag to webhook
   function sendTag(tagValue) {
-    const ghlContactId = localStorage.getItem("ghl_contact_id");
-    if (!ghlContactId) return;
+    const id = localStorage.getItem("ghl_contact_id");
+    if (!id) return;
 
     fetch("https://n8n.eliteempireteam.com/webhook/ghl-social-tag", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        contactId: ghlContactId,
-        tag: tagValue
-      })
-    }).then(res => res.json())
-      .then(data => console.log("✅ Tag sent:", data))
-      .catch(err => console.error("❌ Tag error:", err));
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contactId: id, tag: tagValue })
+    })
+    .then(res => res.json())
+    .then(data => console.log("✅ Tag sent:", data))
+    .catch(err => console.error("❌ Tag error:", err));
   }
 
-  // ✅ Handle Steps 1–5
+  // Handle step buttons
   function markComplete(step) {
     localStorage.setItem("lastCompletedStep", step.toString());
     updateProgressUI();
@@ -202,20 +207,22 @@
       4: "step-4-link-complete",
       5: "step-5-access-complete"
     };
-
-    if (tagMap[step]) {
-      sendTag(tagMap[step]);
-    }
+    if (tagMap[step]) sendTag(tagMap[step]);
   }
 
-  // 🚀 Final Step 6
   function markStepComplete(step) {
     localStorage.setItem("lastCompletedStep", step.toString());
     sendTag("social setup complete");
     window.location.href = "https://social.eliteempireteam.com/social-setup-complete-page";
   }
 
-  // 🌓 Dark mode toggle
+  // Reset button for testing
+  function resetProgress() {
+    localStorage.clear();
+    location.reload();
+  }
+
+  // Inject reset button
   document.addEventListener("DOMContentLoaded", function () {
     updateProgressUI();
 
@@ -230,10 +237,17 @@
     toggleBtn.addEventListener("click", function () {
       const isDark = document.body.classList.toggle("dark-mode");
       localStorage.setItem("theme", isDark ? "dark" : "light");
-      toggleBtn.textContent = isDark
-        ? "🌞 Enable Light Mode"
-        : "🌙 Enable Dark Mode";
+      toggleBtn.textContent = isDark ? "🌞 Enable Light Mode" : "🌙 Enable Dark Mode";
     });
+
+    // Add Reset Button at the top
+    const resetBtn = document.createElement("button");
+    resetBtn.textContent = "🔁 Reset My Progress";
+    resetBtn.style = "margin-top: 10px; padding: 6px 12px; font-weight: bold; background:#eee; border-radius:6px;";
+    resetBtn.onclick = resetProgress;
+
+    const logoDiv = document.querySelector(".logo");
+    logoDiv?.appendChild(resetBtn);
   });
 </script>
 </body>
