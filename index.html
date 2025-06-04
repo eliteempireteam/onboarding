@@ -13,12 +13,12 @@
       <img src="https://storage.googleapis.com/msgsndr/vnUxqumAkGGJeHp06s9n/media/67fc2eac3baf5df63486c7b6.png" alt="Elite Empire Logo">
     </div>
     <div style="text-align: right; margin-top: 10px;">
-  <button id="theme-toggle" style="padding: 6px 12px; border-radius: 6px; font-weight: bold;">
-    🌙 Enable Dark Mode
-  </button>
-</div>
-
+      <button id="theme-toggle" style="padding: 6px 12px; border-radius: 6px; font-weight: bold;">
+        🌙 Enable Dark Mode
+      </button>
+    </div>
     <h1><span id="agent-name"></span>, Welcome to Elite Empire’s Social Media Setup</h1>
+  </header>
     <p class="intro">
       I'm Coach Barbee, and I want to personally welcome you to the Elite Empire brand setup experience. I understand how important social media influence is in today’s world — but I also know how overwhelming it can be to figure it out on your own. <strong class="key">That’s why I’ve simplified this process for you.</strong>
     </p>
@@ -60,7 +60,7 @@
 
 
   <main>
-    <section id="step1">
+   <section id="step1">
       <h2 title="Connect both platforms for uniform branding">📲 Step 1: Facebook Personal + Instagram Setup</h2>
       <p>Connect your personal Facebook account and Instagram to ensure consistency across platforms. These accounts will form the foundation for your business presence.</p>
       <button id="btn-step-1" class="complete-btn" onclick="markComplete(1)">Mark Step 1 Complete</button>
@@ -78,18 +78,16 @@
       <p>Go to Pages → + Create New Page</p>
       <p>Page Name: Your Name + Financial<br>Example Page Name: Jane Smith Financial<br>Category: Financial Services</p>
       <p>Paste your Master Bio into the "About" section and upload your profile photo and banner from your email.</p>
-
       <h3>Download Meta Business Suite App</h3>
       <p class="subnote">Manage your Facebook Page on the go with the Meta Business Suite app.</p>
       <div class="download-buttons icon-style">
         <a class="meta-btn ios" href="https://apps.apple.com/app/meta-business-suite/id514643583" target="_blank">
-        <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store">
+          <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store">
         </a>
         <a class="meta-btn android" href="https://play.google.com/store/apps/details?id=com.facebook.pages.app" target="_blank">
           <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play">
         </a>
       </div>
-
       <button id="btn-step-3" class="complete-btn" onclick="markComplete(3)">Mark Step 3 Complete</button>
     </section>
 
@@ -124,115 +122,89 @@
         <li>Pages are set to public</li>
       </ul>
       <p>Once confirmed, click the button below to complete setup and launch your brand!</p>
-     <button class="launch-button" onclick="markStepComplete(6)">🚀 Launch My Brand</button>
+      <button class="launch-button" onclick="markStepComplete(6)">🚀 Launch My Brand</button>
     </section>
   </main>
 
-      </section>
-  </main>
   <script>
   // Extract URL parameters
-  const urlParams = new URLSearchParams(window.location.search);
-  const agent = urlParams.get("agent") || "";
-  const ghlContactId = urlParams.get("ghl_contact_id");
+const urlParams = new URLSearchParams(window.location.search);
+    const agentParam = urlParams.get("agent");
+    const contactIdParam = urlParams.get("ghl_contact_id");
+    const storedAgent = localStorage.getItem("agent_name") || "";
+    const storedContactId = localStorage.getItem("ghlcontactId") || "";
+    const agentName = agentParam || storedAgent;
+    const contactId = contactIdParam || storedContactId;
 
-  if (ghlContactId) {
-    localStorage.setItem("ghl_contact_id", ghlContactId);
-  }
+    if (agentParam) localStorage.setItem("agent_name", agentParam);
+    if (contactIdParam) localStorage.setItem("ghlcontactId", contactIdParam);
 
-  document.getElementById("agent-name").textContent = agent;
+    document.getElementById("agent-name").textContent = decodeURIComponent(agentName || "");
 
-  // 🌟 Progress UI update
-  function updateProgressUI() {
-    const lastCompletedStep = localStorage.getItem("lastCompletedStep") || "0";
-    const percent = Math.round((parseInt(lastCompletedStep) / 6) * 100);
-    document.getElementById("progress-percent").innerText = `${percent}%`;
-
-    const fill = document.getElementById("progress-bar-fill");
-    if (fill) {
-      fill.style.width = percent + "%";
-      fill.innerText = `Building an Empire – ${percent}%`;
-    }
-
-    for (let i = 1; i <= 6; i++) {
-      const step = document.getElementById("step-" + i);
-      if (i <= parseInt(lastCompletedStep)) {
-        step.classList.add("complete");
-      } else {
-        step.classList.remove("complete");
+    function updateProgressUI() {
+      const lastCompletedStep = localStorage.getItem("lastCompletedStep") || "0";
+      const percent = Math.round((parseInt(lastCompletedStep) / 6) * 100);
+      const fill = document.getElementById("progress-bar-fill");
+      if (fill) {
+        fill.style.width = percent + "%";
+        fill.innerText = `Building an Empire – ${percent}%`;
+      }
+      for (let i = 1; i <= 6; i++) {
+        const btn = document.getElementById("btn-step-" + i);
+        if (btn) {
+          if (i <= parseInt(lastCompletedStep)) {
+            btn.textContent = "✅ Step Complete";
+            btn.classList.add("completed");
+            btn.disabled = true;
+          }
+        }
       }
     }
-  }
 
-  // 🔁 Send tag to n8n > GHL
-  function sendTag(tagValue) {
-    const ghlContactId = localStorage.getItem("ghl_contact_id");
-    if (!ghlContactId) return;
-
-    fetch("https://n8n.eliteempireteam.com/webhook/ghl-social-tag", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        contactId: ghlContactId,
-        tag: tagValue
+    function sendTag(tagValue) {
+      const id = localStorage.getItem("ghlcontactId");
+      if (!id) return;
+      fetch("https://n8n.eliteempireteam.com/webhook/ghl-social-tag", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contactId: id, tag: tagValue })
       })
-    }).then(res => res.json())
+      .then(res => res.json())
       .then(data => console.log("✅ Tag sent:", data))
       .catch(err => console.error("❌ Tag error:", err));
-  }
-
-  // ✅ Handle Steps 1–5
-  function markComplete(step) {
-    localStorage.setItem("lastCompletedStep", step.toString());
-    updateProgressUI();
-
-    const button = document.getElementById("btn-step-" + step);
-    if (button) {
-      button.textContent = "✅ Step Complete";
-      button.classList.add("completed");
-      button.disabled = true;
     }
 
-    const tagMap = {
-      1: "step-1-facebook-instagram-complete",
-      2: "step-2-instagram-professional",
-      3: "step-3-page-created",
-      4: "step-4-link-complete",
-      5: "step-5-access-complete"
-    };
-
-    if (tagMap[step]) {
-      sendTag(tagMap[step]);
-    }
-  }
-
-  // 🚀 Final Step 6
-  function markStepComplete(step) {
-    localStorage.setItem("lastCompletedStep", step.toString());
-    sendTag("social setup complete");
-    window.location.href = "https://social.eliteempireteam.com/social-setup-complete-page";
-  }
-
-  // 🌓 Dark mode toggle
-  document.addEventListener("DOMContentLoaded", function () {
-    updateProgressUI();
-
-    const toggleBtn = document.getElementById("theme-toggle");
-    const storedTheme = localStorage.getItem("theme");
-
-    if (storedTheme === "dark") {
-      document.body.classList.add("dark-mode");
-      toggleBtn.textContent = "🌞 Enable Light Mode";
+    function markComplete(step) {
+      localStorage.setItem("lastCompletedStep", step.toString());
+      updateProgressUI();
+      const tagMap = {
+        1: "step-1-facebook-instagram-complete",
+        2: "step-2-instagram-professional",
+        3: "step-3-page-created",
+        4: "step-4-link-complete",
+        5: "step-5-access-complete"
+      };
+      if (tagMap[step]) sendTag(tagMap[step]);
     }
 
-    toggleBtn.addEventListener("click", function () {
-      const isDark = document.body.classList.toggle("dark-mode");
-      localStorage.setItem("theme", isDark ? "dark" : "light");
-      toggleBtn.textContent = isDark
-        ? "🌞 Enable Light Mode"
-        : "🌙 Enable Dark Mode";
+    function markStepComplete(step) {
+      localStorage.setItem("lastCompletedStep", step.toString());
+      sendTag("social setup complete");
+      window.location.href = "https://social.eliteempireteam.com/social-setup-complete-page";
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      updateProgressUI();
+      const toggleBtn = document.getElementById("theme-toggle");
+      const storedTheme = localStorage.getItem("theme");
+      if (storedTheme === "dark") {
+        document.body.classList.add("dark-mode");
+        toggleBtn.textContent = "🌞 Enable Light Mode";
+      }
+      toggleBtn.addEventListener("click", function () {
+        const isDark = document.body.classList.toggle("dark-mode");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+        toggleBtn.textContent = isDark ? "🌞 Enable Light Mode" : "🌙 Enable Dark Mode";
     });
   });
 </script>
