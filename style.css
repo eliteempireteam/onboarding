@@ -216,6 +216,12 @@ body.dark-mode .access-button:hover {
   background-color: #c20810;
 }
 
+body.dark-mode .key,
+body.dark-mode strong.key,
+body.dark-mode b.key {
+  color: #fff !important;
+}
+
 @media (max-width: 768px) {
   .progress-bar {
     flex-wrap: wrap;
